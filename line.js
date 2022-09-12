@@ -9,15 +9,7 @@
 // Call charCodeAt() to examine the ascii code
 exports.line_to_entry = (line) => {
   //toy data 10.49.67.39 6969
-  return [
-    String.fromCharCode(10) +
-      String.fromCharCode(49) +
-      String.fromCharCode(67) +
-      String.fromCharCode(39) +
-      String.fromCharCode(27) +
-      String.fromCharCode(57),
-    [1662945837, 5],
-  ];
+  return ["10.49.67.39:6969", [1662945837, 5]];
 };
 
 // exports.entry_to_line_buffer = (entry) => {
