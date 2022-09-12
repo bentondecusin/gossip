@@ -6,24 +6,27 @@ const line = require("./line");
 const line_queue = new Map();
 
 const host_entry = [NaN, [NaN, NaN]];
-const update_host_entry = (digit) => (host_entry = [, [time]]);
+const update_host_entry = (digit) => (host_entry = [, [time, digit]]);
 
-line_handler = (data) => {
-  entry = line.line_to_entry(data);
-  line_queue.set(entry[0], entry.subarray(1, 3));
-};
+line_handler = line.line_to_entry;
+
+function toDateTime(secs) {
+  var t = new Date(1970, 0, 1); // Epoch
+  t.setSeconds(secs);
+  return t;
+}
 
 const server = net.createServer((socket) => {
   socket.on("data", function (data) {
     const readSize = socket.bytesRead;
+    const entry = line_handler(data);
+    line_queue.set(entry[0], entry[1]);
     console.log(
       "Remote IP: " +
         socket.remoteAddress +
         "; Remote Port: " +
         socket.remotePort,
-      "\nData Got：" + data.toString(),
-      "Translated: " + line.line_to_entry(data),
-      "\nData Length: " + readSize
+      "\nRaw Data: " + data
     );
   });
   socket.on("end", function (data) {
