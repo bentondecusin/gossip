@@ -7,10 +7,20 @@
  */
 
 // Call charCodeAt() to examine the ascii code
-exports.line_to_entry = (line) => {
+exports.line_to_entry = (line, host_entry) => {
   //toy data 10.49.67.39 6969
-  return ["10.49.67.39:6969", [1662945837, 5]];
+  let line_split = line.toString().split(",");
+  if (line_split.length != 3) return null;
+  else [ip_port, time_stamp, digit] = line_split;
+  if (host_entry[0] == ip_port && time_stamp > host_entry[1][0]) return null;
+  return [ip_port, [time_stamp, digit]];
 };
+
+is_address = (ip_port) => {
+  // ip_port_array =
+};
+
+valid_time = (time) => {};
 
 // exports.entry_to_line_buffer = (entry) => {
 //   //toy data 10.49.67.39 6969
