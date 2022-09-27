@@ -11,19 +11,17 @@ const get_table = require("./get_table");
 const MAX_NUMBER_OF_LINES = 250;
 const CHAR_PER_LINE = 40;
 
-// LinkedList-Hashmap-like data structure
-const line_queue = new Map();
-
 // Get server address
 var nwitf = os.networkInterfaces();
 const host_ip = nwitf["en0"][1][address];
 const host_port = 6969;
 
 // Toy data
-let samp_10 = Buffer.alloc(MAX_NUMBER_OF_LINES * CHAR_PER_LINE);
-fs.readFile("./10_sample.csv", "utf8", function (err, data) {
+let samp = Buffer.alloc(MAX_NUMBER_OF_LINES * CHAR_PER_LINE);
+fs.readFile("./5_sample.csv", "utf8", function (err, data) {
   if (err) throw err;
-  samp_10.write(data);
+  // samp.write(data.split("\x00"));
+  samp = data;
 });
 
 const table = new Map();
@@ -35,58 +33,27 @@ const update_host_entry = (digit) => {
 
 line_handler = line.line_to_entry;
 
-let acc = new Buffer.alloc(0);
-const handler = (data, socket) => {
-  // check for delimiter character
-  let offset = data.indexOf(0);
-  if (offset !== -1) {
-    // get the whole message into one Buffer
-    let msg = Buffer.concat(acc, data.slice(0, offset));
-
-    // put rest of data into the accumulatedData buffer as part of next piece of data
-    // skip past the delimiter
-    accumulatedData = data.slice(offset + 1);
-
-    // emit that we now have a whole msg
-    socket.emit("_msg", msg);
-  } else {
-    // no delimiter yet, just accumulate the data
-    accumulatedData = Buffer.concat(accumulatedData, data);
-  }
-};
-
 const server = net.createServer((socket) => {
   socket.on("data", function (data) {
     const readSize = socket.bytesRead;
-
     const entry = line_handler(data, host_entry);
-
     remote_IP_Port = socket.remoteAddress + socket.remotePort;
-    // if (line_queue.has(remote_IP_Port))
-    //   line_queue.set(remote_IP_Port, [
-    //     ...line_queue.get[remote_IP_Port],
-    //     entry,
-    //   ]);
-    // else line_queue.set(remote_IP_Port, [entry]);
-
     console.log(
-      "Remote IP:Port " + socket.remoteAddress + ":" + socket.remotePort,
-      "\nRaw Data: " + data + "; Packet size: " + readSize
+      socket.remoteAddress + ":" + socket.remotePort,
+      " said: " + data
     );
-    console.log("\nParsed:", entry);
   });
 });
 
 server.on("connection", (socket) => {
   socket.setTimeout(1000 * 5);
   console.log(
-    "New hot damn connection from " +
-      socket.remoteAddress +
-      ":" +
-      socket.remotePort
+    "New request from " + socket.remoteAddress + ":" + socket.remotePort
   );
-  socket.write(samp_10);
-  console.log();
+  socket.write(samp);
+  console.log(
+    "Request from " + socket.remoteAddress + ":" + socket.remotePort + " done"
+  );
   socket.end();
 });
 
