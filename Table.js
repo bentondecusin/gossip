@@ -8,14 +8,14 @@ module.exports.Table = class Table {
   host_digit;
   ip_map = new Map(); // ip_map: ip -> entry_arr
 
-  Table(ip = "127.0.0.1", port = "6969") {
+  constructor(ip = "127.0.0.1", port = "6969", mad = false) {
     this.ip_map = new Map();
-    this.host_port = ip;
-    this.host_port = port;
-    host_ts = util.get_time();
+    this.host_ip = ip;
+    if (mad) ip_map.this.host_port = port;
   }
+
   update_host = (digit) => {
-    this.digit = digit;
+    this.host_digit = digit;
     this.host_ts = util.get_time();
   };
 
@@ -26,6 +26,8 @@ module.exports.Table = class Table {
     } else this.ip_map.get(ip).add_entry(port, ts, digit);
   };
 
-  pretty_print = () =>
+  pretty_print = () => {
+    console.log(this.host_ip, this.host_port, this.host_ts, this.host_digit);
     this.ip_map.forEach((entry, ip) => console.log(ip, entry.entry_arr));
+  };
 };
