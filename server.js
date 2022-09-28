@@ -7,7 +7,7 @@ const line = require("./line_util");
 const util = require("./util");
 const client = require("./client");
 const readline = require("readline");
-const { Table } = require("./Table");
+const { Table } = require("./Table.js");
 
 // Set allow at most 250 lines
 const MAX_NUMBER_OF_LINES = 250;
@@ -15,7 +15,16 @@ const CHAR_PER_LINE = 40;
 
 // Get server address
 var nwitf = os.networkInterfaces();
-const host_ip = nwitf["en0"][1]["address"];
+
+var host_ip = "127.0.0.1";
+try {
+  host_ip = nwitf["en0"][1]["address"];
+} catch (e) {
+  try {
+    host_ip = nwitf["en5"][1]["address"];
+  } catch (e) {}
+}
+
 const host_port = 6969;
 
 // Toy data
