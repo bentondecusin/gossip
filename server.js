@@ -7,7 +7,7 @@ const line = require("./line_util");
 const util = require("./util");
 const client = require("./client");
 const readline = require("readline");
-const { Table } = require("./table");
+const { Table } = require("./Table");
 
 // Set allow at most 250 lines
 const MAX_NUMBER_OF_LINES = 250;
