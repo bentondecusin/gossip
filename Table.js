@@ -1,7 +1,7 @@
 const util = require("./util");
 const { Entry } = require("./Entry.js");
 
-module.exports.Table = class Table {
+module.exports = class Table {
   host_ip;
   host_port;
   host_ts;
