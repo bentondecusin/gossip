@@ -25,7 +25,7 @@ try {
   } catch (e) {}
 }
 
-const host_port = 6969;
+var host_port = 6969;
 
 // Toy data
 let samp = Buffer.alloc(MAX_NUMBER_OF_LINES * CHAR_PER_LINE);
@@ -42,8 +42,6 @@ line_handler = line.line_to_entry;
 
 const server = net.createServer((socket) => {
   socket.on("data", function (data) {
-    const readSize = socket.bytesRead;
-    const entry = line_handler(data, host_entry);
     remote_IP_Port = socket.remoteAddress + socket.remotePort;
     console.log(
       socket.remoteAddress + ":" + socket.remotePort,
@@ -57,7 +55,23 @@ server.on("connection", (socket) => {
   console.log(
     "New request from " + socket.remoteAddress + ":" + socket.remotePort
   );
-  socket.write(samp);
+
+  if (table.host_digit != undefined)
+    socket.write(
+      host_ip +
+        ":" +
+        host_port +
+        "," +
+        table.host_ts +
+        "," +
+        table.host_digit +
+        "\n"
+    );
+  table.ip_map.forEach((entries, ip) =>
+    entries.entry_arr.map((entry) =>
+      socket.write(ip + ":" + entry[0] + "," + entry[1] + "," + entry[2] + "\n")
+    )
+  );
   console.log(
     "Request from " + socket.remoteAddress + ":" + socket.remotePort + " done"
   );
@@ -70,8 +84,16 @@ server.on("timeout", function (skt) {
 });
 
 server.listen(6969, function () {
+  table.add_entry("42.42.42.42", "6969", "2", "1");
   console.log("Instance 6969 Listening");
 });
+
+server.on("error", () =>
+  server.listen(6968, function () {
+    console.log("Instance 6968 Listening");
+    var host_port = 6968;
+  })
+);
 
 // const vibe_check = setInterval(() => {
 //   update_host_entry(util.get_time() % 10);
@@ -84,9 +106,9 @@ const rl = readline.createInterface({
 
 rl.on("line", (input) => {
   if (input === "!") table.pretty_print();
-  else if (parseInt(input) < 10 && parseInt(input) >= 0)
+  else if (parseInt(input) < 10 && parseInt(input) >= 0) {
     table.update_host(parseInt(input));
-  else if (input[0] == "+") {
+  } else if (input[0] == "+") {
     try {
       const [inq_ip, inq_port] = input.split("+")[1].split(":");
       client.inquire(
@@ -99,7 +121,6 @@ rl.on("line", (input) => {
         table
       );
     } catch (e) {
-      //+122.0.0.1:22
       console.log(e);
     }
   }

@@ -11,6 +11,7 @@ module.exports = class Table {
   constructor(ip = "127.0.0.1", port = "6969", mad = false) {
     this.ip_map = new Map();
     this.host_ip = ip;
+    this.host_port = port;
     if (mad) ip_map.this.host_port = port;
   }
 
