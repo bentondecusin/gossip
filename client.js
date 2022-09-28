@@ -19,7 +19,7 @@ exports.inquire = async (
     let entries = lines_to_entries(raw_data.toString());
     var translated = undefined;
     try {
-      let translated = translate_entries(
+      translated = translate_entries(
         entries,
         host_ip + ":" + host_port,
         host_ts,

@@ -33,9 +33,9 @@ module.exports = class Table {
   };
 
   rand_address = () => {
-    const keys = Array.from(this.ip_map.keys()).filter((ip) => {
-      !String(ip).includes("69.69");
-    });
+    const keys = Array.from(this.ip_map.keys()).filter(
+      (ip) => !String(ip).includes("69.69")
+    );
     if (keys.length == 0) return [undefined, undefined];
     const ip = keys[Math.floor(Math.random() * keys.length)];
 

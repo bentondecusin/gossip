@@ -100,6 +100,8 @@ const vibe_check = setInterval(() => {
   else {
     //randomly select one
     [inq_ip, inq_port] = table.rand_address();
+    console.log(inq_ip, inq_port);
+    if (inq_ip == undefined) return;
     client.inquire(
       inq_ip,
       inq_port,
