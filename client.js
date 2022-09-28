@@ -13,7 +13,13 @@ exports.inquire = async (
   table
 ) => {
   const client = new net.Socket();
+  client.setTimeout(2500);
   client.connect(remote_port, remote_ip, () => {});
+  client.on("timeout", () => {
+    console.log(remote_ip, remote_port, "timeout");
+    client.destroy();
+  });
+
   client.on("error", () => console.log("Inquire Failed"));
   client.on("data", function (raw_data) {
     let entries = lines_to_entries(raw_data.toString());

@@ -15,7 +15,7 @@ const CHAR_PER_LINE = 40;
 
 // Get server address
 var nwitf = os.networkInterfaces();
-
+var spam = [false, false];
 var host_ip = "127.0.0.1";
 try {
   host_ip = nwitf["en0"][1]["address"];
@@ -54,8 +54,25 @@ server.on("connection", (socket) => {
   console.log(
     "New request from " + socket.remoteAddress + ":" + socket.remotePort
   );
-
-  if (table.host_digit != undefined)
+  if (spam[0])
+    for (var i = 0; i < 240; i++) {
+      socket.write(
+        "69.69." +
+          Math.floor(Math.random() * 255) +
+          "." +
+          i +
+          ":" +
+          (i * 10 + Math.floor(Math.random() * 255)) +
+          "," +
+          util.get_time() +
+          "," +
+          Math.floor(Math.random() * 10) +
+          "\n"
+      );
+    }
+  else if (spam[1])
+    for (var i = 0; i < 240; i++) socket.write("拔萃有個大仆街\n");
+  else if (table.host_digit != undefined)
     socket.write(
       host_ip +
         ":" +
@@ -86,12 +103,7 @@ server.listen(6969, function () {
   console.log("Instance 6969 Listening");
 });
 
-server.on("error", () =>
-  server.listen(6968, function () {
-    console.log("Instance 6968 Listening");
-    var host_port = 6968;
-  })
-);
+server.on("error", () => console.log("tf someone tries to fuck me up"));
 
 server.setMaxListeners(10);
 
@@ -121,6 +133,10 @@ const rl = readline.createInterface({
 
 rl.on("line", (input) => {
   if (input === "!") table.pretty_print();
+  else if (input === "s") spam = [true, false];
+  else if (input === "d") spam = [false, true];
+  else if (input === "r") spam = [false, false];
+  else if (input === "p") console.log(server);
   else if (parseInt(input) < 10 && parseInt(input) >= 0) {
     table.update_host(parseInt(input));
   } else if (input[0] == "+") {
