@@ -1,7 +1,7 @@
 const net = require("net");
 const util = require("./util");
 const { lines_to_entries, translate_entries } = require("./line_util");
-const { Table } = require("./Table.js");
+const Table = require("./Table.js");
 
 exports.inquire = async (
   remote_ip = "127.0.0.1",
@@ -35,6 +35,6 @@ exports.inquire = async (
       remote_ip + ":" + remote_port,
       "complete"
     );
-    t.pretty_print();
+    table.pretty_print();
   });
 };

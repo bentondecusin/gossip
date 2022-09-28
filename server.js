@@ -21,7 +21,7 @@ try {
   host_ip = nwitf["en0"][1]["address"];
 } catch (e) {
   try {
-    host_ip = nwitf["en5"][1]["address"];
+    host_ip = nwitf["ens160"][0]["address"];
   } catch (e) {}
 }
 
