@@ -1,7 +1,7 @@
 const net = require("net");
 const util = require("./util");
 const { lines_to_entries, translate_entries } = require("./line_util");
-const { Table } = require("./table");
+const { Table } = require("./Table.js");
 
 exports.inquire = async (
   remote_ip = "127.0.0.1",
