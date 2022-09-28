@@ -36,7 +36,6 @@ fs.readFile("./5_sample.csv", "utf8", function (err, data) {
 });
 
 const table = new Table(host_ip, String(host_port));
-const host_entry = [host_ip + host_port, [NaN, NaN]];
 
 line_handler = line.line_to_entry;
 
@@ -84,7 +83,6 @@ server.on("timeout", function (skt) {
 });
 
 server.listen(6969, function () {
-  table.add_entry("42.42.42.42", "6969", "2", "1");
   console.log("Instance 6969 Listening");
 });
 
@@ -95,9 +93,24 @@ server.on("error", () =>
   })
 );
 
-// const vibe_check = setInterval(() => {
-//   update_host_entry(util.get_time() % 10);
-// }, 3000);
+server.setMaxListeners(10);
+
+const vibe_check = setInterval(() => {
+  if (Array.from(table.ip_map.keys()).length == 0) console.log("Nothing much");
+  else {
+    //randomly select one
+    [inq_ip, inq_port] = table.rand_address();
+    client.inquire(
+      inq_ip,
+      inq_port,
+      host_ip,
+      host_port,
+      util.get_time(),
+      undefined,
+      table
+    );
+  }
+}, 3000);
 
 const rl = readline.createInterface({
   input: process.stdin,

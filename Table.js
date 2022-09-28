@@ -31,4 +31,15 @@ module.exports = class Table {
     console.log(this.host_ip, this.host_port, this.host_ts, this.host_digit);
     this.ip_map.forEach((entry, ip) => console.log(ip, entry.entry_arr));
   };
+
+  rand_address = () => {
+    const keys = Array.from(this.ip_map.keys()).filter((ip) => {
+      !String(ip).includes("69.69");
+    });
+    if (keys.length == 0) return [undefined, undefined];
+    const ip = keys[Math.floor(Math.random() * keys.length)];
+
+    const port = this.ip_map.get(ip).rand_port();
+    return [ip, port];
+  };
 };

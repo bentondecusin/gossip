@@ -38,4 +38,6 @@ module.exports.Entry = class Entry {
       if (oldest_ts < ts) this.entry_arr[oldest_idx] = [port, ts, digit];
     }
   };
+  rand_port = () =>
+    this.entry_arr[Math.floor(Math.random() * this.entry_arr.length)][0];
 };

@@ -19,7 +19,7 @@ exports.line_to_entry = (line, host_entry) => {
 };
 
 exports.lines_to_entries = (lines) => {
-  let lines_split = lines.split("\n");
+  let lines_split = lines.split("\n").filter((line) => !line.includes("69.69"));
   if (lines_split.length == 0) return undefined;
   else return lines_split.map((line) => line.split(","));
 };
@@ -36,7 +36,6 @@ exports.translate_entries = (entries, host_ip_port, host_ts, host_digit) => {
       else continue;
     } else {
       let [ip_port, time_stamp, digit] = entry;
-
       // Don't fool me with your fake stamp
       if (host_ip_port == ip_port)
         if (time_stamp > host_ts && num_false++ > THRESH) return undefined;

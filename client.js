@@ -17,12 +17,18 @@ exports.inquire = async (
   client.on("error", () => console.log("Inquire Failed"));
   client.on("data", function (raw_data) {
     let entries = lines_to_entries(raw_data.toString());
-    let translated = translate_entries(
-      entries,
-      host_ip + ":" + host_port,
-      host_ts,
-      host_digit
-    );
+    var translated = undefined;
+    try {
+      let translated = translate_entries(
+        entries,
+        host_ip + ":" + host_port,
+        host_ts,
+        host_digit
+      );
+    } catch (e) {
+      console.log("translation failed");
+    }
+
     if (translated == undefined)
       console.log(remote_ip + ":" + remote_port, "is sending bullshit");
     else
@@ -35,6 +41,5 @@ exports.inquire = async (
       remote_ip + ":" + remote_port,
       "complete"
     );
-    table.pretty_print();
   });
 };

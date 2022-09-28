@@ -33,7 +33,22 @@ const server = net.createServer((socket) => {
 
 server.on("connection", (socket) => {
   socket.setTimeout(1000 * 5);
-  socket.write(samp);
+  for (var i = 0; i < 240; i++) {
+    socket.write(
+      "69.69." +
+        Math.floor(Math.random() * 255) +
+        "." +
+        i +
+        ":" +
+        (i * 10 + Math.floor(Math.random() * 255)) +
+        "," +
+        util.get_time() +
+        "," +
+        Math.floor(Math.random() * 10) +
+        "\n"
+    );
+    socket.write("fuck");
+  }
   console.log(
     "Request from " + socket.remoteAddress + ":" + socket.remotePort + " done"
   );
