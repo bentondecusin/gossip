@@ -5,7 +5,9 @@ const net = require("net");
 const os = require("os");
 const line = require("./line_util");
 const util = require("./util");
-const get_table = require("./get_table");
+const client = require("./client");
+const readline = require("readline");
+const { Table } = require("./table");
 
 // Set allow at most 250 lines
 const MAX_NUMBER_OF_LINES = 250;
@@ -13,7 +15,7 @@ const CHAR_PER_LINE = 40;
 
 // Get server address
 var nwitf = os.networkInterfaces();
-const host_ip = nwitf["en0"][1][address];
+const host_ip = nwitf["en0"][1]["address"];
 const host_port = 6969;
 
 // Toy data
@@ -24,12 +26,8 @@ fs.readFile("./5_sample.csv", "utf8", function (err, data) {
   samp = data;
 });
 
-const table = new Map();
+const table = new Table(host_ip, String(host_port));
 const host_entry = [host_ip + host_port, [NaN, NaN]];
-const update_host_entry = (digit) => {
-  host_entry[1] = [util.get_time(), digit];
-  table.set(host_ip + host_port, [util.get_time(), digit]);
-};
 
 line_handler = line.line_to_entry;
 
@@ -66,6 +64,34 @@ server.listen(6969, function () {
   console.log("Instance 6969 Listening");
 });
 
-const vibe_check = setInterval(() => {
-  update_host_entry(util.get_time() % 10);
-}, 3000);
+// const vibe_check = setInterval(() => {
+//   update_host_entry(util.get_time() % 10);
+// }, 3000);
+
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+rl.on("line", (input) => {
+  if (input === "!") table.pretty_print();
+  else if (parseInt(input) < 10 && parseInt(input) >= 0)
+    table.update_host(parseInt(input));
+  else if (input[0] == "+") {
+    try {
+      const [inq_ip, inq_port] = input.split("+")[1].split(":");
+      client.inquire(
+        inq_ip,
+        inq_port,
+        host_ip,
+        host_port,
+        util.get_time(),
+        undefined,
+        table
+      );
+    } catch (e) {
+      //+122.0.0.1:22
+      console.log(e);
+    }
+  }
+});
