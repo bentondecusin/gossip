@@ -7,4 +7,3 @@ const client = new net.Socket();
 client.connect(remote_port, remote_ip, () => {});
 client.on("error", () => console.log("Inquire Failed"));
 client.on("data", function (raw_data) {});
-client.setMaxListeners
